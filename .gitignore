@@ -1,3 +1,6 @@
 .venv
 .vscode
 .env
+
+ngrok
+image.png
