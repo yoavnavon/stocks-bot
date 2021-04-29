@@ -4,8 +4,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import os
 from dotenv import load_dotenv
 load_dotenv()
-PORT = int(os.environ.get('PORT', 8443))
-
+PORT = int(os.environ.get('PORT', '8443'))
+print(PORT)
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -54,8 +54,9 @@ def main():
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path=TOKEN)
-    updater.bot.setWebhook('https://fathomless-springs-83910.herokuapp.com/' + TOKEN)
+                          url_path=TOKEN,
+                          webhook_url="https://fathomless-springs-83910.herokuapp.com/" + TOKEN
+                          )
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
