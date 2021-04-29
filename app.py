@@ -53,11 +53,8 @@ def data(update, context):
   
     msft = yf.Ticker("MSFT")
 
-    # get stock info
-    print(msft.info)
-
     # get historical market data
-    hist = msft.history(period="5d")
+    hist = msft.history(period="30d")
 
     hist['Close'].plot(figsize=(16, 9))
     plt.savefig('image.png')
