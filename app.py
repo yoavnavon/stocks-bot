@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 PORT = int(os.environ.get('PORT', '8443'))
-print(PORT)
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
