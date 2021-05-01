@@ -1,9 +1,7 @@
 
-from utils import upload_to_aws
+from utils import plot_history, upload_to_aws
 
-import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 import logging
 import os
 import uuid
@@ -12,7 +10,9 @@ from telegram.ext import Updater, CommandHandler
 from dotenv import load_dotenv
 import yfinance as yf
 import matplotlib
+
 matplotlib.use('AGG')
+sns.set_style("darkgrid")
 
 
 # Load env variables
@@ -27,7 +27,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 TOKEN = os.environ['TOKEN']
 
-sns.set_style("darkgrid")
 
 PERIODS = set(['1d', '5d', '1mo', '3mo', '6mo',
               '1y', '2y', '5y', '10y', 'ytd', 'max'])
@@ -77,35 +76,8 @@ def plot(update, context):
     if ticker in yf.shared._ERRORS:
         return update.message.reply_text(f'{ticker} not a valid ticker')
 
-    # Prepare data
-    hist.index.rename('index', inplace=True)
-    hist = hist.reset_index()
-    hist['index_str'] = hist['index'].astype(str)
-    hist['index_str'] = hist.index_str.apply(lambda label: label[5:-9])
-
     # Plot
-    _, valueax = plt.subplots(figsize=(12, 8))
-    sns.lineplot(x='index_str', y='Close', data=hist, ax=valueax)
-    valueax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
-    valueax.set_xlabel(ticker)
-    valueax.set_ylabel('value')
-    valueax.tick_params(axis='x', rotation=30)
-    valueax.set_ylim([hist['Close'].min() * 0.98, hist['Close'].max()])
-
-    volumeax = valueax.twinx()
-    sns.barplot(x='index_str', y='Volume', data=hist,
-                ax=volumeax, color="salmon")
-    volumeax.tick_params(
-        axis='y',
-        right=False,
-        labelright=False)
-    volumeax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
-    volumeax.set_ylim([0, 5 * hist['Volume'].max()])
-    volumeax.set_ylabel('')
-    volumeax.grid(False)
-
-    plt.savefig('image.png')
-    plt.clf()
+    plot_history(hist, ticker)
 
     # Upload chart to AWS so its available to anyone
     aws_file = f'{uuid.uuid4()}.png'
