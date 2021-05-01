@@ -89,7 +89,7 @@ def plot(update, context):
     valueax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
     valueax.set_xlabel(ticker)
     valueax.set_ylabel('value')
-    valueax.tick_params(valueaxis='x', rotation=30)
+    valueax.tick_params(axis='x', rotation=30)
     valueax.set_ylim([hist['Close'].min() * 0.98, hist['Close'].max()])
 
     volumeax = valueax.twinx()
@@ -102,6 +102,7 @@ def plot(update, context):
     volumeax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
     volumeax.set_ylim([0, 5 * hist['Volume'].max()])
     volumeax.set_ylabel('')
+    volumeax.grid(False)
 
     plt.savefig('image.png')
     plt.clf()
