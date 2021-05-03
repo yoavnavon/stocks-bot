@@ -79,7 +79,7 @@ def plot(update, context):
 
     # Plot
     plot_history(hist, ticker)
-    plt.savefig('image.png')
+    plt.savefig('image.png', bbox_inches='tight')
     plt.clf()
 
     # Upload chart to AWS so its available to anyone
