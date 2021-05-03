@@ -10,6 +10,7 @@ from telegram.ext import Updater, CommandHandler
 from dotenv import load_dotenv
 import yfinance as yf
 import matplotlib
+import matplotlib.pyplot as plt
 
 matplotlib.use('AGG')
 sns.set_style("darkgrid")
