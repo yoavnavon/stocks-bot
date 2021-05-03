@@ -35,7 +35,7 @@ def plot_history(hist, ticker):
     # Plot
     width = len(hist)//4
     height = width // 2
-    _, valueax = plt.subplots(figsize=(width, height))
+    _, valueax = plt.subplots(figsize=(width, height), dpi=300)
     for _, row in hist.iterrows():
         color = 'green' if row['Close'] > row['Open'] else 'red'
         valueax.vlines(row['index_str'], row['Low'], row['High'], color=color)

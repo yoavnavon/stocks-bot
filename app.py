@@ -61,7 +61,7 @@ def plot(update, context):
         period = args[1]
         if period not in PERIODS:
             return update.message.reply_text(f'{period} not a valid period')
-        interval = "5m" if period.endswith('d') else interval
+        interval = "15m" if period.endswith('d') else interval
 
     # Validate interval arg
     if len(args) == 3:
