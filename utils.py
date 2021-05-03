@@ -33,12 +33,14 @@ def plot_history(hist, ticker):
     hist['index_str'] = hist['index'].apply(parse_date)
 
     # Plot
-    _, valueax = plt.subplots(figsize=(12, 8))
+    width = len(hist)//4
+    height = width // 2
+    _, valueax = plt.subplots(figsize=(width, height))
     for _, row in hist.iterrows():
         color = 'green' if row['Close'] > row['Open'] else 'red'
         valueax.vlines(row['index_str'], row['Low'], row['High'], color=color)
         valueax.vlines(row['index_str'], row['Close'],
-                       row['Open'], color=color, linewidth=6)
+                       row['Open'], color=color, linewidth=4)
     valueax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
     valueax.set_xlabel(ticker)
     valueax.set_ylabel('value')
