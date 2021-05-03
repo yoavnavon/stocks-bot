@@ -33,8 +33,8 @@ def plot_history(hist, ticker):
     hist['index_str'] = hist['index'].apply(parse_date)
 
     # Plot
-    width = len(hist)//4
-    height = width // 2
+    width = len(hist) // 4
+    height = 4
     _, valueax = plt.subplots(figsize=(width, height), dpi=100)
     for _, row in hist.iterrows():
         color = 'green' if row['Close'] > row['Open'] else 'red'
@@ -55,6 +55,6 @@ def plot_history(hist, ticker):
         right=False,
         labelright=False)
     volumeax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
-    volumeax.set_ylim([0, 5 * hist['Volume'].max()])
+    volumeax.set_ylim([0, 6 * hist['Volume'].max()])
     volumeax.set_ylabel('')
     volumeax.grid(False)

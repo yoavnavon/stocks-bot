@@ -53,7 +53,7 @@ def plot(update, context):
         return update.message.reply_text('Please provide ticker as argument')
 
     ticker = args[0].upper()
-    period = "1mo"
+    period = "1wk"
     interval = "1h"
 
     # Validate period arg
