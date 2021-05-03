@@ -78,6 +78,8 @@ def plot(update, context):
 
     # Plot
     plot_history(hist, ticker)
+    plt.savefig('image.png')
+    plt.clf()
 
     # Upload chart to AWS so its available to anyone
     aws_file = f'{uuid.uuid4()}.png'
