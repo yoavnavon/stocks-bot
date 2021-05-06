@@ -53,29 +53,27 @@ def plot(update, context):
         return update.message.reply_text('Please provide ticker as argument')
 
     ticker = args[0].upper()
-    period = "1wk"
     interval = "1h"
-
-    # Validate period arg
-    if len(args) >= 2:
-        period = args[1]
-        if period not in PERIODS:
-            return update.message.reply_text(f'{period} not a valid period')
-        interval = "15m" if period.endswith('d') else interval
+    period = "1y"
 
     # Validate interval arg
-    if len(args) == 3:
-        interval = args[2]
+    if len(args) == 2:
+        interval = args[1]
         if interval not in INTERVALS:
             return update.message.reply_text(f'{interval} not a valid interval')
+        if interval.endswith('m'):
+            period = "1mo"
 
     # Get historical market data
     stock = yf.Ticker(ticker)
-    hist = stock.history(period=period, interval=interval)
+    hist = stock.history(period=period, interval=interval, prepost=True)
 
     # If ticker is not valid, will appear in _ERRORS dict
     if ticker in yf.shared._ERRORS:
-        return update.message.reply_text(f'{ticker} not a valid ticker')
+        return update.message.reply_text(f'{yf.shared._ERRORS[ticker]}')
+
+    # Keep last data points
+    hist = hist.tail(100)
 
     # Plot
     plot_history(hist, ticker)

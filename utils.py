@@ -23,23 +23,26 @@ def upload_to_aws(local_file, bucket, s3_file):
 
 
 def parse_date(date):
-    return f"{date.day}/{date.month}-{date.hour}:{date.minute}"
+    hour = str(date.hour)
+    minute = str(date.minute)
+    return f"{date.day}/{date.month}-{hour.zfill(2)}:{minute.zfill(2)}"
 
 
 def plot_history(hist, ticker):
     # Prepare data
-    hist.index.rename('index', inplace=True)
+    hist.index.rename('date', inplace=True)
     hist = hist.reset_index()
-    hist['index_str'] = hist['index'].apply(parse_date)
+    hist['date_str'] = hist['date'].apply(parse_date)
 
     # Plot
-    width = len(hist) // 4
+    width = 10
     height = 4
     _, valueax = plt.subplots(figsize=(width, height), dpi=100)
     for _, row in hist.iterrows():
         color = 'green' if row['Close'] > row['Open'] else 'red'
-        valueax.vlines(row['index_str'], row['Low'], row['High'], color=color)
-        valueax.vlines(row['index_str'], row['Close'],
+        valueax.vlines(row['date_str'], row['Low'],
+                       row['High'], color=color, linewidth=.5)
+        valueax.vlines(row['date_str'], row['Close'],
                        row['Open'], color=color, linewidth=4)
     valueax.set_xticks(np.linspace(0, len(hist)-1, num=5, dtype=int))
     valueax.set_xlabel(ticker)
@@ -48,7 +51,7 @@ def plot_history(hist, ticker):
     valueax.set_ylim([hist['Low'].min() * 0.96, hist['High'].max() * 1.01])
 
     volumeax = valueax.twinx()
-    sns.barplot(x='index_str', y='Volume', data=hist,
+    sns.barplot(x='date_str', y='Volume', data=hist,
                 ax=volumeax, color="salmon")
     volumeax.tick_params(
         axis='y',
