@@ -5,8 +5,10 @@ import seaborn as sns
 import logging
 import os
 import uuid
+from functools import wraps
 
 from telegram.ext import Updater, CommandHandler
+from telegram import ChatAction
 from dotenv import load_dotenv
 import yfinance as yf
 import matplotlib
@@ -35,6 +37,19 @@ INTERVALS = set(['1m', '2m', '5m', '15m', '30m', '60m',
                 '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo'])
 
 
+def send_typing_action(func):
+    """Sends typing action while processing func command."""
+
+    @wraps(func)
+    def command_func(update, context, *args, **kwargs):
+        context.bot.send_chat_action(
+            chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
+        return func(update, context,  *args, **kwargs)
+
+    return command_func
+
+
+@send_typing_action
 def start(update, context):
     """Send a message when the command /start is issued."""
     update.message.reply_text('Hi there!')
@@ -45,6 +60,7 @@ def help(update, context):
     update.message.reply_text('Help!')
 
 
+@send_typing_action
 def plot(update, context):
 
     args = context.args
